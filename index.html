@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AppVault — My Apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #18181f;
+      --border: rgba(255,255,255,0.07);
+      --accent: #6ee7f7;
+      --accent2: #a78bfa;
+      --accent3: #f472b6;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --card-hover: rgba(110,231,247,0.04);
+      --r: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grid noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(110,231,247,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 110%, rgba(167,139,250,0.07) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── Header ─── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 64px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+    }
+    .logo span { color: var(--accent); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+    #search {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px 8px 36px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      width: 220px;
+      outline: none;
+      transition: border-color 0.2s, width 0.3s;
+    }
+    #search:focus {
+      border-color: var(--accent);
+      width: 280px;
+    }
+    #search::placeholder { color: var(--muted); }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 5vw, 4rem) clamp(2rem, 5vw, 3.5rem);
+      max-width: 700px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      background: rgba(110,231,247,0.08);
+      border: 1px solid rgba(110,231,247,0.2);
+      border-radius: 99px;
+      padding: 4px 12px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+    .hero-tag::before {
+      content: '●';
+      animation: blink 1.6s infinite;
+      font-size: 8px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    /* ─── Filter Bar ─── */
+    .filter-bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-right: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+    .filter-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      letter-spacing: 0.03em;
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active {
+      background: rgba(110,231,247,0.1);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ─── Grid ─── */
+    .grid-section {
+      position: relative;
+      z-index: 1;
+      padding: 0 clamp(1.5rem, 5vw, 4rem) 5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-size: 0.8rem;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    #app-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    #app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ─── App Card ─── */
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.22s cubic-bezier(.22,1,.36,1), border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.4s both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(20px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    .app-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(110,231,247,0.25);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(110,231,247,0.08);
+      background: var(--card-hover);
+    }
+    .app-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(110,231,247,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .app-card:hover::before { opacity: 1; }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .app-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    .app-meta { flex: 1; min-width: 0; }
+    .app-name {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-version {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .app-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 1.25rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.25rem;
+    }
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.66rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .app-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .stat svg { opacity: 0.5; }
+
+    .dl-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(110,231,247,0.15), rgba(167,139,250,0.1));
+      border: 1px solid rgba(110,231,247,0.3);
+      color: var(--accent);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .dl-btn:hover {
+      background: linear-gradient(135deg, rgba(110,231,247,0.25), rgba(167,139,250,0.18));
+      border-color: var(--accent);
+      box-shadow: 0 0 16px rgba(110,231,247,0.15);
+    }
+    .dl-btn:active { transform: scale(0.97); }
+
+    /* ─── Platform badges ─── */
+    .platform-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+    }
+    .platform-windows { background: rgba(14,165,233,0.12); color: #38bdf8; border: 1px solid rgba(14,165,233,0.2); }
+    .platform-macos   { background: rgba(248,250,252,0.06); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); }
+    .platform-linux   { background: rgba(250,204,21,0.1);  color: #fbbf24; border: 1px solid rgba(250,204,21,0.2); }
+    .platform-android { background: rgba(34,197,94,0.1);   color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+    .platform-web     { background: rgba(167,139,250,0.1); color: var(--accent2); border: 1px solid rgba(167,139,250,0.2); }
+
+    /* ─── Skeleton ─── */
+    .skeleton {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .skel {
+      background: linear-gradient(90deg, var(--surface2) 25%, rgba(255,255,255,0.04) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+    }
+    @keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+
+    /* ─── Empty / Error ─── */
+    .state-box {
+      grid-column: 1/-1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 2rem;
+      text-align: center;
+      gap: 1rem;
+    }
+    .state-box .icon { font-size: 3rem; opacity: 0.3; }
+    .state-box p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ─── Footer ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .footer-pulse {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-pulse::before {
+      content: '●';
+      color: #4ade80;
+      font-size: 8px;
+      animation: blink 2s infinite;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+    @media (max-width: 600px) {
+      #app-grid { grid-template-columns: 1fr; }
+      #search { width: 160px; }
+      #search:focus { width: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⬡</div>
+    App<span>Vault</span>
+  </div>
+  <div class="header-right">
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="search" id="search" placeholder="Search apps…" autocomplete="off"/>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-tag">Open Source Apps</div>
+  <h1>All my apps,<br><em>one place.</em></h1>
+  <p>Browse, explore, and download every app I've built. Each release is automatically published here via GitHub Actions.</p>
+</section>
+
+<div class="filter-bar" id="filter-bar">
+  <span class="filter-label">FILTER</span>
+  <button class="filter-btn active" data-filter="all">All</button>
+</div>
+
+<section class="grid-section">
+  <div class="section-header">
+    <span class="section-title">// apps</span>
+    <span id="app-count"></span>
+  </div>
+  <div id="app-grid">
+    <!-- Skeletons while loading -->
+    <div class="skeleton"><div class="skel" style="height:52px;width:52px;border-radius:12px"></div><div class="skel" style="height:18px;width:60%"></div><div class="skel" style="height:12px;width:40%"></div><div class="skel" style="height:56px"></div><div class="skel" style="height:32px;width:120px;align-self:flex-end"></div></div>
+    <div class="skeleton"><div class="skel" style="height:52px;width:52px;border-radius:12px"></div><div class="skel" style="height:18px;width:70%"></div><div class="skel" style="height:12px;width:35%"></div><div class="skel" style="height:56px"></div><div class="skel" style="height:32px;width:120px;align-self:flex-end"></div></div>
+    <div class="skeleton"><div class="skel" style="height:52px;width:52px;border-radius:12px"></div><div class="skel" style="height:18px;width:55%"></div><div class="skel" style="height:12px;width:45%"></div><div class="skel" style="height:56px"></div><div class="skel" style="height:32px;width:120px;align-self:flex-end"></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-pulse">Data auto-updated by GitHub Actions</div>
+  <span>© <span id="yr"></span> AppVault</span>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   CONFIG — point this to your registry JSON file.
+   GitHub Actions from each repo should push/update
+   entries into this file (or a folder of JSONs).
+   ══════════════════════════════════════════════════════ */
+const REGISTRY_URL = './apps.json';
+
+/* ══════════════════════════════════════════════════════
+   SAMPLE DATA — used as fallback / demo when no
+   apps.json is found. GitHub Actions will overwrite
+   apps.json with real data.
+   ══════════════════════════════════════════════════════ */
+const DEMO_APPS = [
+  {
+    id: "devnotes",
+    name: "DevNotes",
+    version: "1.3.0",
+    description: "A blazing-fast local markdown notepad for developers. Syncs via file system, never touches the cloud.",
+    icon: "📝",
+    iconBg: "linear-gradient(135deg,#1e3a5f,#0f2040)",
+    tags: ["productivity","markdown","electron"],
+    platforms: ["windows","macos","linux"],
+    downloadUrl: "https://github.com/you/devnotes/releases/latest",
+    downloads: 1420,
+    stars: 87,
+    updated: "2025-03-08"
+  },
+  {
+    id: "portpulse",
+    name: "PortPulse",
+    version: "0.9.2",
+    description: "Live network port scanner and process monitor. See what's running on your machine at a glance.",
+    icon: "🔍",
+    iconBg: "linear-gradient(135deg,#1a3030,#0d2020)",
+    tags: ["network","cli","sysadmin"],
+    platforms: ["windows","linux"],
+    downloadUrl: "https://github.com/you/portpulse/releases/latest",
+    downloads: 865,
+    stars: 56,
+    updated: "2025-02-28"
+  },
+  {
+    id: "palettegen",
+    name: "PaletteGen",
+    version: "2.1.0",
+    description: "Generate, preview and export beautiful color palettes from any image or HEX seed. Export to CSS, Figma, and JSON.",
+    icon: "🎨",
+    iconBg: "linear-gradient(135deg,#3b1a5f,#1a0f40)",
+    tags: ["design","tool","web"],
+    platforms: ["web"],
+    downloadUrl: "https://github.com/you/palettegen/releases/latest",
+    downloads: 3210,
+    stars: 203,
+    updated: "2025-03-01"
+  },
+  {
+    id: "snapclip",
+    name: "SnapClip",
+    version: "1.0.5",
+    description: "Clipboard history manager that keeps your last 500 clips, searchable and pinnable. Lightweight system tray app.",
+    icon: "📋",
+    iconBg: "linear-gradient(135deg,#3a1a1a,#201010)",
+    tags: ["utility","tray","productivity"],
+    platforms: ["windows","macos"],
+    downloadUrl: "https://github.com/you/snapclip/releases/latest",
+    downloads: 2100,
+    stars: 140,
+    updated: "2025-03-05"
+  },
+  {
+    id: "taskflow",
+    name: "TaskFlow",
+    version: "3.0.1",
+    description: "Minimal kanban board that lives locally. No account, no subscription. Just plain-text task management.",
+    icon: "✅",
+    iconBg: "linear-gradient(135deg,#0f3a1a,#081d0e)",
+    tags: ["productivity","kanban","local"],
+    platforms: ["windows","macos","linux"],
+    downloadUrl: "https://github.com/you/taskflow/releases/latest",
+    downloads: 4780,
+    stars: 312,
+    updated: "2025-02-20"
+  },
+  {
+    id: "logwatcher",
+    name: "LogWatcher",
+    version: "1.1.0",
+    description: "Real-time log tail viewer with regex filtering, color highlighting, and alert triggers. Great for debugging servers.",
+    icon: "📡",
+    iconBg: "linear-gradient(135deg,#1a2a0f,#0d1508)",
+    tags: ["devops","cli","monitoring"],
+    platforms: ["linux","macos"],
+    downloadUrl: "https://github.com/you/logwatcher/releases/latest",
+    downloads: 670,
+    stars: 44,
+    updated: "2025-01-15"
+  }
+];
+
+/* ══════════════════════════════════════════════════════ */
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+let allApps = [];
+let activeFilter = 'all';
+
+function platformBadge(p) {
+  const labels = { windows:'Windows', macos:'macOS', linux:'Linux', android:'Android', web:'Web' };
+  return `<span class="platform-badge platform-${p}">${labels[p]||p}</span>`;
+}
+
+function renderCard(app, delay) {
+  const stars  = app.stars  ? `<span class="stat"><svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>${app.stars}</span>` : '';
+  const dls    = app.downloads ? `<span class="stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>${app.downloads.toLocaleString()}</span>` : '';
+  const tags   = (app.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+  const plats  = (app.platforms||[]).map(platformBadge).join('');
+  const iconStyle = app.iconBg ? `background:${app.iconBg}` : 'background:var(--surface2)';
+  const updated = app.updated ? `<span class="stat"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${app.updated}</span>` : '';
+
+  return `
+    <div class="app-card" style="animation-delay:${delay}ms">
+      <div class="card-top">
+        <div class="app-icon" style="${iconStyle}">${app.icon||'📦'}</div>
+        <div class="app-meta">
+          <div class="app-name">${app.name}</div>
+          <div class="app-version">
+            v${app.version||'1.0.0'}
+            &nbsp;${plats}
+          </div>
+        </div>
+      </div>
+      <p class="app-desc">${app.description||''}</p>
+      ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+      <div class="card-footer">
+        <div class="app-stats">${stars}${dls}${updated}</div>
+        <a class="dl-btn" href="${app.downloadUrl||'#'}" target="_blank" rel="noopener">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>`;
+}
+
+function renderGrid(apps) {
+  const grid = document.getElementById('app-grid');
+  document.getElementById('app-count').textContent = `${apps.length} app${apps.length!==1?'s':''}`;
+  if (!apps.length) {
+    grid.innerHTML = `<div class="state-box"><div class="icon">🔭</div><p>No apps match your search.</p></div>`;
+    return;
+  }
+  grid.innerHTML = apps.map((a,i)=>renderCard(a, i*60)).join('');
+}
+
+function buildFilters(apps) {
+  const allTags = new Set(apps.flatMap(a=>a.tags||[]));
+  const bar = document.getElementById('filter-bar');
+  // remove old tag buttons but keep "All"
+  [...bar.querySelectorAll('[data-filter]:not([data-filter="all"])')].forEach(b=>b.remove());
+  allTags.forEach(tag=>{
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.filter = tag;
+    btn.textContent = tag;
+    bar.appendChild(btn);
+  });
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  let result = allApps;
+  if (activeFilter !== 'all') result = result.filter(a=>(a.tags||[]).includes(activeFilter));
+  if (q) result = result.filter(a=>
+    a.name.toLowerCase().includes(q) ||
+    (a.description||'').toLowerCase().includes(q) ||
+    (a.tags||[]).some(t=>t.includes(q))
+  );
+  renderGrid(result);
+}
+
+document.getElementById('filter-bar').addEventListener('click', e=>{
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter;
+  applyFilters();
+});
+
+document.getElementById('search').addEventListener('input', applyFilters);
+
+async function loadApps() {
+  try {
+    const res = await fetch(REGISTRY_URL, { cache: 'no-cache' });
+    if (!res.ok) throw new Error('not found');
+    allApps = await res.json();
+  } catch {
+    // Fallback to demo data
+    allApps = DEMO_APPS;
+  }
+  buildFilters(allApps);
+  applyFilters();
+}
+
+loadApps();
+</script>
+</body>
+</html>
