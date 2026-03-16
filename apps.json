@@ -40,10 +40,10 @@
     "platforms": [
       "android"
     ],
-    "downloadUrl": "https://github.com/abster07/NotifyVault/releases/download/build-18/notifyvault.apk",
+    "downloadUrl": "https://github.com/abster07/NotifyVault/releases/download/build-19/notifyvault.apk",
     "downloads": 0,
     "stars": 0,
     "updated": "2026-03-16",
-    "commit": "fc52b40"
+    "commit": "06e89b6"
   }
 ]
