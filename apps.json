@@ -22,5 +22,28 @@
     "stars": 0,
     "updated": "2026-03-11",
     "commit": "ec9e570"
+  },
+  {
+    "id": "notifyvault",
+    "name": "NotifyVault",
+    "version": "1.0.0",
+    "description": "Never lose a notification again. NotifyVault silently captures every notification \u2014 even after it's dismissed \u2014 and stores it permanently. Browse your full notification history, filter by app category, star important ones, set reminders, and search across everything. Supports light and dark themes.",
+    "iconUrl": "icons/notifyvault.png",
+    "iconBg": "linear-gradient(135deg,#0f0a1a,#7c3aed)",
+    "tags": [
+      "notifications",
+      "productivity",
+      "history",
+      "reminder",
+      "android"
+    ],
+    "platforms": [
+      "android"
+    ],
+    "downloadUrl": "https://github.com/abster07/NotifyVault/releases/download/build-18/notifyvault.apk",
+    "downloads": 0,
+    "stars": 0,
+    "updated": "2026-03-16",
+    "commit": "fc52b40"
   }
 ]
