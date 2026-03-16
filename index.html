@@ -624,7 +624,7 @@ function renderCard(app, delay) {
   return `
     <div class="app-card" style="animation-delay:${delay}ms">
       <div class="card-top">
-        <div class="app-icon" style="${iconStyle}">${app.icon||'📦'}</div>
+        <img src="${app.iconUrl || 'icons/app.png'}" href="logo" class="app-icon">
         <div class="app-meta">
           <div class="app-name">${app.name}</div>
           <div class="app-version">
