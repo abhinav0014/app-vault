@@ -45,5 +45,22 @@
     "stars": 0,
     "updated": "2026-03-16",
     "commit": "f239016"
+  },
+  {
+    "id": "abhi-qrld",
+    "name": "Abhi Qrld",
+    "version": "3ca4809",
+    "description": "Android app",
+    "iconUrl": "icons/abhi-qrld.png",
+    "iconBg": "",
+    "tags": [],
+    "platforms": [
+      "android"
+    ],
+    "downloadUrl": "https://github.com/abster07/QRLD/releases/download/build-5/",
+    "downloads": 0,
+    "stars": 0,
+    "updated": "2026-03-28",
+    "commit": "3ca4809"
   }
 ]
