@@ -48,19 +48,30 @@
   },
   {
     "id": "abhi-qrld",
-    "name": "Abhi Qrld",
-    "version": "3ca4809",
-    "description": "Android app",
+    "name": "QRLD",
+    "version": "1.0",
+    "description": "A fast and easy-to-use QR Scanner & Maker app that lets you instantly scan any QR code or barcode and generate your own in seconds. Whether you\u2019re opening links, sharing contact info, connecting to Wi-Fi, or creating custom codes for business or personal use, this app does it all with a clean interface and lightning-fast performance. Simple, reliable, and designed for everyday convenience.",
     "iconUrl": "icons/abhi-qrld.png",
-    "iconBg": "",
-    "tags": [],
+    "iconBg": "linear-gradient(135deg,#1a0533,#6d28d9)",
+    "tags": [
+      "qr scanner",
+      "qr code",
+      "barcode scanner",
+      "qr generator",
+      "qr maker",
+      "scan",
+      "create",
+      "mobile",
+      "utility",
+      "productivity"
+    ],
     "platforms": [
       "android"
     ],
-    "downloadUrl": "https://github.com/abster07/QRLD/releases/download/build-5/",
-    "downloads": 0,
+    "downloadUrl": "https://github.com/abster07/QRLD/releases/download/build-6/",
+    "downloads": 1,
     "stars": 0,
     "updated": "2026-03-28",
-    "commit": "3ca4809"
+    "commit": "e8068fd"
   }
 ]
