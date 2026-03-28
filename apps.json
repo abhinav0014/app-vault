@@ -65,13 +65,11 @@
       "utility",
       "productivity"
     ],
-    "platforms": [
-      "android"
-    ],
-    "downloadUrl": "https://github.com/abster07/QRLD/releases/download/build-6/",
+    "platforms": null,
+    "downloadUrl": "https://github.com/abster07/QRLD/releases/download/build-8/QRLD.apk",
     "downloads": 1,
     "stars": 0,
     "updated": "2026-03-28",
-    "commit": "e8068fd"
+    "commit": "dfc7d47"
   }
 ]
