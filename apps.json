@@ -40,11 +40,11 @@
     "platforms": [
       "android"
     ],
-    "downloadUrl": "https://github.com/abster07/NotifyVault/releases/download/build-22/notifyvault.apk",
-    "downloads": 0,
+    "downloadUrl": "https://github.com/abster07/NotifyVault/releases/download/build-23/notifyvault.apk",
+    "downloads": 4,
     "stars": 0,
-    "updated": "2026-03-16",
-    "commit": "f239016"
+    "updated": "2026-03-28",
+    "commit": "95147e7"
   },
   {
     "id": "abhi-qrld",
